@@ -1,5 +1,5 @@
 ---
-name: Securin-ASPM
+name: Shiftleft Scan
 on:
   pull_request:
     branches:
@@ -11,19 +11,19 @@ on:
 jobs:
   scanning:
     env:
-      APP_ID: 0bedd9c7bd1eb2dfd8827a31bc10fcb848f279074a102e0308b84f73ff8b738a
+      APP_ID: 229e99d5b56c42aa09e508f24a85c137ad4d5125a636882caf4c3439e14a3a25
       BRANCH_NAME: main
-      SCAN_ID: 61a412aae101677eeda8876a4bba5381d109c0a6589f0b995da0a26ddacf6e53
-      REQ_URL_MAP: "${{toJSON('{\"SL_RESULT_API_HOST\":\"https://013e-49-204-117-161.ngrok.io/resultapi\"\
-        ,\"SL_RESULTPARSER_API_HOST\":\"https://5919-49-204-117-161.ngrok.io/resultparserapi\"\
+      SCAN_ID: b7474b0d1c1d425e0943a2b3458978ac54812b45b2deb1d23e692bf8958f2b37
+      REQ_URL_MAP: "${{toJSON('{\"SL_RESULT_API_HOST\":\"https://slresultapi.qa.securin.io/resultapi\"\
+        ,\"SL_RESULTPARSER_API_HOST\":\"https://slresultparserapi.qa.securin.io/resultparserapi\"\
         }')}}"
     steps:
     - name: Retrieve Token Info
       id: auth_token
-      run: "respJson=$(curl --location --request GET 'https://013e-49-204-117-161.ngrok.io/resultapi/aws/ecr/token'\
+      run: "respJson=$(curl --location --request GET 'https://slresultapi.qa.securin.io/resultapi/aws/ecr/token'\
         \  --header 'Authorization: Bearer ${{secrets.CLI_ACCESS_TOKEN}}'  --data-raw\
-        \ ' ' ) \necho \"authTokenJson=$respJson\" >> $GITHUB_OUTPUT"
-    - uses: actions/checkout@v3
+        \ ' ' )\necho \"::set-output name=authTokenJson::$respJson\""
+    - uses: actions/checkout@v2
     - name: Scan Initiated
       id: sec_scan_init
       run: "usrVal=$(echo '${{fromJson(steps.auth_token.outputs.authTokenJson).user}}'\
@@ -42,7 +42,7 @@ jobs:
         \ ${{ env.REQ_URL_MAP }} -tool_name github event:${{ github.event_name }}\
         \  pr_number:${{ github.event.number }}"
     - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v1
       with:
         sarif_file: "${{github.workspace}}/results/result.sarif"
       if: hashFiles('**/result.sarif') !=''
