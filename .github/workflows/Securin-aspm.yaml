@@ -13,7 +13,7 @@ jobs:
     env:
       APP_ID: 89cd4019487ae0e09c8ef1c67a1cd626a7c109592535041278caea4ea65d14f6
       BRANCH_NAME: main
-      SCAN_ID: 26c30edfa788006991e63e1256a14a3f8ad389b01e68a6ba63c952cca2720164
+      SCAN_ID: 60184ce60bb0b1c17e7c03bade85c007785018a1ad43e45010b09447aaa1f1ca
       REQ_URL_MAP: "${{toJSON('{\"SL_RESULT_API_HOST\":\"https://89fd-49-204-118-200.ngrok.io/resultapi\"\
         ,\"SL_RESULTPARSER_API_HOST\":\"https://8a1d-49-204-118-200.ngrok.io/resultparserapi\"\
         }')}}"
